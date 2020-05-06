@@ -1,0 +1,36 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd ">
+
+    <!-- Initialization for data source -->
+    <!--you can directly set your property value here-->
+    <bean id="dataSource"
+                  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="${db.driver}"/>
+    <property name="url" value="${db.url}"/>
+    <property name="username" value="${db.username}"/>
+    <property name="password" value="${db.password}"/>
+</bean>
+    <!--if your property file is not in classpath-->
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <!--<property name="locations" value="file:#{ systemProperties['app.config.dir']}/db.properties"/>-->
+        <!--if your property in classpath-->
+        <!--<property name="locations" value="classpath:db.properties"/>-->
+        <!--id your property in known dir-->
+        <property name="locations" value="file:///C:/usr/db.properties"/>
+    </bean>
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+            
+
+    <!-- Definition for studentJDBCTemplate bean -->
+    <bean id="studentRepoImpl"
+          class="com.spring.repository.StudentRepoImpl">
+        <!--<property name = "dataSource" ref = "dataSource" />-->
+        <constructor-arg ref="jdbcTemplate"/>
+    </bean>
+
+</beans>
